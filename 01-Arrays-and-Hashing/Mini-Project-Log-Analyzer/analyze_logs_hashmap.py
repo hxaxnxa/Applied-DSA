@@ -57,6 +57,34 @@ def print_all_count(hash_map):
     if not found_item:
         print("No IP addresses found.")
 
+def get_all_pairs(hash_map):
+    all_pairs = []
+    for i in range(hash_map.capacity):
+        current_node = hash_map.array[i]
+        while current_node is not None:
+            all_pairs.append((current_node.key,current_node.value))
+            current_node = current_node.next
+    return all_pairs
+
+def find_top_ips(hash_map,top_n):
+    print(f"\n--- 🏆 Top {top_n} Most Frequent IPs ---")
+    all_ip_pairs = get_all_pairs(hash_map)
+
+    if not all_ip_pairs:
+        print("No data to analyze.")
+        return
+    
+    try:
+        sorted_ips = sorted(all_ip_pairs, key=lambda x:x[1], reverse =True)
+    except TypeError:
+        print("Error: Unable to sort IP addresses due to incompatible data types.")
+        return
+    
+    top_ips = sorted_ips[:top_n]
+
+    for i, (ip,count) in enumerate(top_ips):
+        print(f"{i+1}. IP: {ip}, Count: {count}")
+
     
 def analyze_logs(file_name):
     ip_count = HashMap(capacity=20)
@@ -93,3 +121,4 @@ if __name__ == "__main__":
 
     if final_counts:
         print_all_count(final_counts)
+        find_top_ips(final_counts, top_n=5)
